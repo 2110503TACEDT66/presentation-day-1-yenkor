@@ -9,6 +9,10 @@ app.use(express.json());
 
 connectDB();
 
+const carProviders = require("./routes/carProviders");
+
+app.use("/api/v1/carproviders", carProviders);
+
 const PORT = process.env.PORT || 5000;
 
 const server = app.listen(
