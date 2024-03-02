@@ -8,15 +8,17 @@ const {
 } = require("../controllers/CarProviders");
 
 const router = express.Router();
-const CarProvider = require("../models/CarProvider");
-// const { protect, authorize } = require("../middleware/auth");
+const { protect, authorize } = require("../middleware/auth");
 
-router.route("/").get(getCarProviders).post(createCarProvider);
+router
+  .route("/")
+  .get(getCarProviders)
+  .post(protect, authorize("admin"), createCarProvider);
 
 router
   .route("/:id")
   .get(getCarProvider)
-  .put(updateCarProvider)
-  .delete(deleteCarProvider);
+  .put(protect, authorize("admin"), updateCarProvider)
+  .delete(protect, authorize("admin"), deleteCarProvider);
 
 module.exports = router;
