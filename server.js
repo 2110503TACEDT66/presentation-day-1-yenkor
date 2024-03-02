@@ -15,7 +15,6 @@ const cookieParser = require("cookie-parser"); // Cookie parser for parsing cook
 ///////////////////////////////////////////////////////////////
 // Import security packages
 ///////////////////////////////////////////////////////////////
-
 const mongoSanitize = require("express-mongo-sanitize"); // Mongo sanitize for preventing NoSQL injection
 const helmet = require("helmet"); // Helmet for setting various HTTP headers for security
 const { xss } = require("express-xss-sanitizer"); // XSS sanitizer for preventing XSS attacks
@@ -75,6 +74,7 @@ connectDB();
 
 const carProviders = require("./routes/carProviders");
 const rentings = require("./routes/rentings");
+const auth = require("./routes/auth");
 
 ///////////////////////////////////////////////////////////////
 // Use routes
@@ -82,6 +82,7 @@ const rentings = require("./routes/rentings");
 
 app.use("/api/v1/carproviders", carProviders);
 app.use("/api/v1/rentings", rentings);
+app.use("/api/v1/auth", auth);
 
 ///////////////////////////////////////////////////////////////
 // Set up server
