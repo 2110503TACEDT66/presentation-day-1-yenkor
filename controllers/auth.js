@@ -6,7 +6,7 @@ const User = require('../models/User');
 exports.register = async (req,res,next) => {
     try {
         // Destructuring an req (object) -> var
-        const { name, telephone, email, password } = req.body;
+        const { name, telephone, email, password, balance } = req.body;
 
         //Creating a user
         const newUser = await User.create({
@@ -14,6 +14,7 @@ exports.register = async (req,res,next) => {
             telephone,
             email,
             password,
+            balance
         });
 
         sendTokenResponse(newUser, 200, res);

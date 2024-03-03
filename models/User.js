@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const UserSchema = new mongoose.Schema({
     name: {
         type: String,
-        require: [true, 'Please specify name'],
+        required: [true, 'Please specify name'],
         trim: true
     },
     telephone: {
@@ -14,7 +14,7 @@ const UserSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        require: [true,'Please specify your email'],
+        required: [true,'Please specify your email'],
         unique: true,
         match: [
             /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
@@ -23,12 +23,17 @@ const UserSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        require: [true, 'Please specify a password'],
+        required: [true, 'Please specify a password'],
         minlength: [8,'Password length must be at least 8 charactors'],
         select: false
     },
     resetPasswordToken: String,
     resetPasswordExpire: Date,
+    balance: {
+        type: Number,
+        min: [0,"Balance cannot below than 0"],
+        default: 0
+    },
     role: {
         type: String,
         enum: ['user', 'admin'], //Check if role is valid
@@ -56,6 +61,17 @@ UserSchema.methods.getSignedJwtToken = function() {
 //Check if password is match
 UserSchema.methods.isPasswordMatch = async function(enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
+}
+
+//Check if user's balance is enough for renting
+UserSchema.methods.checkBalance = async function(price) {
+    return await this.balance >= price;
+}
+
+//Set user's balance
+UserSchema.methods.setBalance = function(balance) {
+    this.balance = balance
+    return balance
 }
 
 module.exports = mongoose.model('User', UserSchema);
