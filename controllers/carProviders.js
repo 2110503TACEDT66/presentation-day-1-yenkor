@@ -89,13 +89,21 @@ exports.getCarProvider = async (req, res, next) => {
 // @access  Private
 exports.createCarProvider = async (req, res, next) => {
   try {
-    const carProvider = await CarProvider.create(req.body);
+    const {name, address, telephone, price} = req.body;
+    
+    const carProvider = await CarProvider.create({
+      name,
+      address,
+      telephone,
+      price
+    });
 
     res.status(201).json({
       success: true,
       data: carProvider,
     });
   } catch (err) {
+    console.log(err);
     res.status(400).json({ success: false });
   }
 };
