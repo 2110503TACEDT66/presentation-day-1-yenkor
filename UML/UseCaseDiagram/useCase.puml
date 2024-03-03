@@ -17,7 +17,6 @@ user -- viewCarProvider
 user -- manageBookings
 
 actor "Admin" as admin
-register -- admin
 login -- admin
 logout -- admin
 viewCarProvider -- admin
