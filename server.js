@@ -74,6 +74,7 @@ connectDB();
 const carProviders = require("./routes/carProviders");
 const rentings = require("./routes/rentings");
 const auth = require("./routes/auth");
+const topUp = require("./routes/topUp");
 
 ///////////////////////////////////////////////////////////////
 // Use routes
@@ -82,7 +83,7 @@ const auth = require("./routes/auth");
 app.use("/api/v1/carproviders", carProviders);
 app.use("/api/v1/rentings", rentings);
 app.use("/api/v1/auth", auth);
-
+app.use("/api/v1/topUp", topUp);
 ///////////////////////////////////////////////////////////////
 // Set up server
 ///////////////////////////////////////////////////////////////
