@@ -7,17 +7,23 @@ title "Create Car Provider (POST)"
 participant "Client" as client
 participant "<<javaScript>>\n:server" as server
 participant "<<router>>\n:carProviders" as routerCarProvider
-participant "<<controllers>>\n:carProvider" as controllersCarProvider
+participant "<<controllers>>\n:carProviders" as controllersCarProvider
 participant "<<model>>\n:CarProvider" as modelCarProvider
 database "<<MongoDB>>\n:carproviders" as CarProviderDatabase
 
+
 client->server ++:req.post('/api/v1/carproviders')
 server->routerCarProvider ++:app.use('/api/v1/carproviders', carProviders)
-routerCarProvider -> controllersCarProvider ++: createCarProvider()
+routerCarProvider -> controllersCarProvider ++: createCarProvider(req, res, next)
 controllersCarProvider->modelCarProvider ++: create(req.body)
-modelCarProvider ->CarProviderDatabase ++: CarProviderSchema
-CarProviderDatabase --> modelCarProvider --: carProvider
-controllersCarProvider <-- modelCarProvider --: carProvider
-controllersCarProvider->client --: response.status(201).json({success: true, data: carProvider})
+
+alt carProvider created successfully
+  modelCarProvider ->CarProviderDatabase ++: CarProviderSchema
+  CarProviderDatabase --> modelCarProvider --: carProvider
+  controllersCarProvider <-- modelCarProvider --: carProvider
+  controllersCarProvider->client --: res.status(201).json({success: true, data: carProvider})
+else error in creating carProvider
+  controllersCarProvider->client --: res.status(400).json({ success: false })
+end
 
 @enduml
