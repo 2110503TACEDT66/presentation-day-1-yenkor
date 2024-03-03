@@ -14,9 +14,9 @@ const CarProviderSchema = new mongoose.Schema(
       required: [true, "Please add an address"],
     },
 
-    tel: {
+    telephone: {
       type: String,
-      required: [true, "Please add a tel"],
+      required: [true, "Please add a telephone"],
       maxlength: [10, "Phone number can not be longer than 10 characters"],
     },
   },
