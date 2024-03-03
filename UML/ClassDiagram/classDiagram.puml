@@ -1,0 +1,12 @@
+@startuml
+entity "User" as User {
+    *_id : mongoose.Schema.ObjectID <<generated>>
+    --
+    *name: String
+    telephone: String
+    *email: String
+    *password: String
+    role: String
+    createAt: Date
+}
+@enduml
