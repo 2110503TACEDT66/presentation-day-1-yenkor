@@ -1,20 +1,28 @@
 const mongoose = require('mongoose');
 
-const RentingSchema = mongoose.Schema({
+const provider = require('../models/CarProvider');
+
+const RentingSchema = new mongoose.Schema({
     rentDate: {
         type: Date,
-        require: [true, 'Please add Rent Date']
+        required: [true, 'Please add Rent Date']
     },
     user: {
         type: mongoose.Schema.ObjectId,
         ref: 'User',
-        require: [true, 'Please add User']
+        required: [true, 'Please add User']
     },
     carProvider: {
         type: mongoose.Schema.ObjectId,
         ref: 'CarProvider',
-        require: [true, 'Please add Car Provider']
+        required: [true, 'Please add Car Provider']
     },
+    // price: {
+    //     type: Number,
+    //     default: function() {
+    //         return this.carProvider.price;
+    //     }
+    // },
     creatAt: {
         type: Date,
         default: Date.now()
