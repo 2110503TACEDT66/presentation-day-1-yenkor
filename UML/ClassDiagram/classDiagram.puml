@@ -9,4 +9,12 @@ entity "User" as User {
     role: String
     createAt: Date
 }
+
+entity "CarProvider" as CarProvider {
+    *_id : mongoose.Schema.ObjectID <<generated>>
+    --
+    *name: String
+    *tel: String
+    *address: String
+}
 @enduml
