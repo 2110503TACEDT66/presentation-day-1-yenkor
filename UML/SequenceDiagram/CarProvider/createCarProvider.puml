@@ -1,0 +1,23 @@
+@startuml Create Car Provider (POST)
+
+header Sample RentalCarBooking Sequence Diagram
+footer Page %page% of %lastpage%
+title "Create Car Provider (POST)"
+
+participant "Client" as client
+participant "<<javaScript>>\n:server" as server
+participant "<<router>>\n:carProviders" as routerCarProvider
+participant "<<controllers>>\n:carProvider" as controllersCarProvider
+participant "<<model>>\n:CarProvider" as modelCarProvider
+database "<<MongoDB>>\n:carproviders" as CarProviderDatabase
+
+client->server ++:req.post('/api/v1/carproviders')
+server->routerCarProvider ++:app.use('/api/v1/carproviders', carProviders)
+routerCarProvider -> controllersCarProvider ++: createCarProvider()
+controllersCarProvider->modelCarProvider ++: create(req.body)
+modelCarProvider ->CarProviderDatabase ++: CarProviderSchema
+CarProviderDatabase --> modelCarProvider --: carProvider
+controllersCarProvider <-- modelCarProvider --: carProvider
+controllersCarProvider->client --: response.status(201).json({success: true, data: carProvider})
+
+@enduml
