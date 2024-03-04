@@ -1,8 +1,7 @@
-@startuml Get Renting (GET)
-
+@startuml Get all Renting
 header Sample RentalCarBooking Sequence Diagram
 footer Page %page% of %lastpage%
-title "Get Renting (GET)"
+title "Get all Rentings (GET)"
 
 participant "Client" as client
 participant "<<javaScript>>\n:server" as server
@@ -11,11 +10,14 @@ participant "<<controllers>>\n:rentings" as controllersRenting
 participant "<<model>>\n:renting" as modelRenting
 database "<<MongoDB>>\n:rentings" as rentingDatabase
 
-
-client->server ++:req.get('rentings/:id')
+client->server ++:req.get('/api/v1/rentings')
 server->routerRenting ++:app.use('/rentings', rentings)
-routerRenting -> controllersRenting ++: getRenting()
-controllersRenting->modelRenting ++: findById(req.params.id)
+routerRenting -> controllersRenting ++: getRentings(req, res, next)
+alt req.user.role = admin
+  controllersRenting->modelRenting ++: find()
+else req.user.role = user
+  controllersRenting->modelRenting ++: findById(req.params.id)
+end
 
 alt renting exists
   modelRenting ->rentingDatabase ++: rentingSchema
@@ -23,7 +25,6 @@ alt renting exists
   controllersRenting <-- modelRenting --: renting
   controllersRenting->client --: res.status(200)
 else renting does not exist
-  controllersRenting->client --: res.status(400)
+  controllersRenting->client --: res.status(500)
 end
-
 @enduml
