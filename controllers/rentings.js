@@ -172,6 +172,15 @@ exports.updateRenting = async (req, res, next) => {
         }
 
         renting = await Renting.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+        
+        const today = new Date();
+        let before = new Date();
+        before.setDate(today.getDate() - 1);
+        //not allow to edit one day before renting start
+        if(renting.rentDate >= before && req.user.role !== 'admin') {
+            return res.status(403).json({success: false, message: "User are not allowed to edit renting information after a day before the renting, please contact customer service if the change is necessary"});
+        }
+        
         res.status(200).json({success: true, data: renting});
     }
     catch(err) {
@@ -192,6 +201,14 @@ exports.deleteRenting = async (req,res,next) => { // Please Refund user's balanc
         if (renting.user.toString() !== req.user.id && req.user.role !== 'admin') {
             return res.status(401).json({success: false, message: `User ${req.user.id} is not authorize to delete this renting`});
         }
+
+        const today = new Date();
+        let before = new Date();
+        before.setDate(today.getDate() - 1);
+        if(renting.rentDate >= before && req.user.role !== 'admin') {
+            return res.status(403).json({success: false, message: "User are not allowed to cancel renting in a day before the renting, please contact customer service if the cancellation is necessary"});
+        }
+
 
         const user = await User.findById(renting.user);
         const carProvider = await Provider.findById(renting.carProvider);
