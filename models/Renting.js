@@ -26,6 +26,10 @@ const RentingSchema = new mongoose.Schema({
     createAt: {
         type: Date,
         default: Date.now()
+    },
+    returned: {
+        type: Boolean,
+        default: false
     }
 
 });
