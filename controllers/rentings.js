@@ -76,11 +76,11 @@ exports.getOverdueRentings = async (req,res,next) => {
     }
     near.populate({
         path: 'carProvider',
-        select: 'name address telephone'
+        select: 'name address telephone price'
     });
     overdue.populate({
         path: 'carProvider',
-        select: 'name address telephone'
+        select: 'name address telephone price'
     });
 
     try{
