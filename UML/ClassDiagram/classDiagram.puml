@@ -1,20 +1,86 @@
 @startuml
-entity "User" as User {
-    *_id : mongoose.Schema.ObjectID <<generated>>
-    --
-    *name: String
-    telephone: String
-    *email: String
-    *password: String
-    role: String
-    createAt: Date
+left to right direction
+package "Rental Car Booking"{
+    class "<<Application>>\nRental Car Booking" as rentalCarBooking{}
+
+    class "<<Resource>>\nUsers" as ResourceUsers{
+        <<GET>> +register():User
+        <<POST>> +login():User
+        <<GET>> +logout():void
+    }
+
+    ' class "<<Resource>>\nUser" as ResourceUser {
+    '     <<DELETE>> -deleteUser(): void
+    ' }
+
+    class "<<Representation>>\nUser" as RepresentationUser {
+        -name
+        -telephone
+        -email
+        -password
+        -balance
+        -role
+        -createAt
+    }
+
+
+    
+
+    class "<<Resource>>\nRentings" as ResourceRentings{
+        <<GET>> -getRentings()
+        <<POST>> -addRenting()
+    }
+
+    class "<<Resource>>\nRenting" as ResourceRenting {
+        <<GET>> +getRenting()
+        <<PUT>> -updateRenting()
+        <<DELETE>> -deleteRenting()
+    }
+
+    class "<<Representation>>\nRenting" as RepresentationRenting {
+        -rentDate
+        -rentTo
+        -user
+        -carProvider
+        -createAt
+        -returned
+    }
+
+
+    
+
+    class "<<Resource>>\nCarProviders" as ResourceCarProviders{
+        <<GET>> +getCarProviders()
+        <<POST>> -createCarProvider()
+    }
+
+    class "<<Resource>>\nCarProvider" as ResourceCarProvider {
+        <<GET>> +getCarProvider()
+        <<PUT>> -updateCarProvider()
+        <<DELETE>> -deleteCarProvider()
+    }
+
+    class "<<Representation>>\nCarProvider" as RepresentationCarProvider {
+        -name
+        -address
+        -telephone
+        -price
+    }
+
+
+
 }
 
-entity "CarProvider" as CarProvider {
-    *_id : mongoose.Schema.ObjectID <<generated>>
-    --
-    *name: String
-    *tel: String
-    *address: String
-}
+rentalCarBooking ..> ResourceUsers:"/auth\n<<Path>>"
+' ResourceUsers ..> ResourceUser: "/{:id}\n<<Path>>"
+ResourceUsers ..> RepresentationUser: "<<use>>"
+
+rentalCarBooking ..> ResourceRentings:"/rentings\n<<Path>>"
+ResourceRentings ..> ResourceRenting: "/{:id}\n<<Path>>"
+ResourceRenting ..> RepresentationRenting: "<<use>>"
+
+rentalCarBooking ..> ResourceCarProviders:"/carproviders\n<<Path>>"
+ResourceCarProviders ..> ResourceCarProvider: "/{:id}\n<<Path>>"
+ResourceCarProvider ..> RepresentationCarProvider: "<<use>>"
+
 @enduml
