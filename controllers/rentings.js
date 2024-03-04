@@ -109,20 +109,22 @@ exports.addRenting = async (req,res,next) => {
         req.body.user = req.user.id;
         const existedRenting = await Renting.find({user: req.user.id});
         // const {rentDate, user} = req.body;
-
+        
         /**************************** Deducted user's balance ************************** */
         const user = await User.findById(req.user.id);
         const isBalanceEnough = await user.checkBalance(carProvider.price);
 
-        if (!isBalanceEnough) {
+        if (!isBalanceEnough && req.user.role != 'admin') {
             return res.status(400).json({success: false, message: `Your balance is not enough!`});
         }
 
         // const newBalance = user.setBalance(user.balance - carProvider.price);
-
-        await user.updateOne( 
+        if (req.user.role != 'admin') {
+            await user.updateOne( 
             { $inc: { balance: - carProvider.price } }
-        );
+            );
+        }
+        
         /***************************************************************** */
         
         //renting limit
@@ -131,11 +133,16 @@ exports.addRenting = async (req,res,next) => {
         }
 
         
-        const renting = await Renting.create({
-            rentDate: req.body.rentDate,
+        const {rentDate, rentTo, returned} = req.body;
+
+        const renting = await Renting.create({  //rentDate, rentTo, user, carProvider, returned createAt
+            rentDate,
+            rentTo,
             user: req.body.user,
             carProvider: req.body.carProvider,
+            returned
         });
+
         res.status(200).json({success: true, data: renting});
     }
     catch (err) {
