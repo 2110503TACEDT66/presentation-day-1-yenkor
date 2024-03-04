@@ -3,7 +3,6 @@ const {getRentings, getRenting, addRenting, updateRenting, deleteRenting, getOve
 const { protect, authorize } = require('../middleware/auth');
 
 const router = express.Router({mergeParams: true});
-;
 
 router.route('/')
     .get(protect,getRentings)       
