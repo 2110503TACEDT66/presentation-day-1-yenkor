@@ -8,6 +8,7 @@ rectangle "Rental Car Booking" as rentalCarBooking {
     usecase "View\nCarProviders" as viewCarProvider
     usecase "Manage\nBookings" as manageBookings
     usecase "Manage\nCarProvider" as manageCarProvider
+    usecase "Top Up" as topUp
 }
 
 user -- register
@@ -15,6 +16,7 @@ user -- login
 user -- logout
 user -- viewCarProvider
 user -- manageBookings
+user -- topUp
 
 actor "Admin" as admin
 login -- admin
@@ -22,5 +24,6 @@ logout -- admin
 viewCarProvider -- admin
 manageBookings -- admin
 manageCarProvider -- admin
+topUp -- admin
 
 @enduml

@@ -19,7 +19,12 @@ const CarProviderSchema = new mongoose.Schema(
       required: [true, "Please add a telephone"],
       maxlength: [10, "Phone number can not be longer than 10 characters"],
     },
-  },
+    price: {
+      type: Number,
+      required: [true, "Please add a price"],
+      min: [0, "Price cannot below than 0"]
+    }
+},
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },

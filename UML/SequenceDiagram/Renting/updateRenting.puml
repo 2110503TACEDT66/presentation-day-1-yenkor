@@ -1,0 +1,28 @@
+@startuml Update Rentings (PUT)
+
+header Sample RentalCarBooking Sequence Diagram
+footer Page %page% of %lastpage%
+title "Edit renting (PUT)"
+
+participant "Client" as client
+participant "<<javaScript>>\n:server" as server
+participant "<<router>>\n:rentings" as routerRenting
+participant "<<controllers>>\n:rentings" as controllersRenting
+participant "<<model>>\n:Renting" as modelRenting
+database "<<MongoDB>>\n:rentings" as CarProviderDatabase
+
+
+client->server ++:req.put('rentings/:id')
+server->routerRenting ++:app.use('/rentings', rentings)
+routerRenting -> controllersRenting ++: updateRentings(req, res, next)
+controllersRenting->modelRenting ++: findByIdAndUpdate(req.body)
+
+alt edited successfully
+ modelRenting ->CarProviderDatabase ++: RentingSchema
+  CarProviderDatabase --> modelRenting --: rentings
+  controllersRenting <-- modelRenting --: rentings
+  controllersRenting->client --: res.status(200).json({success: true, data: renting})
+else error in editing
+  controllersRenting->client --: res.status(500).json({ success: false })
+end
+@enduml

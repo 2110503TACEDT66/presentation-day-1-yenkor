@@ -6,7 +6,7 @@ const User = require('../models/User');
 exports.register = async (req,res,next) => {
     try {
         // Destructuring an req (object) -> var
-        const { name, telephone, email, password } = req.body;
+        const { name, telephone, email, password, balance } = req.body;
 
         //Creating a user
         const newUser = await User.create({
@@ -14,6 +14,7 @@ exports.register = async (req,res,next) => {
             telephone,
             email,
             password,
+            balance
         });
 
         sendTokenResponse(newUser, 200, res);
@@ -97,6 +98,28 @@ exports.logout = async (req,res,next) => {
     res.status(200).json({success: true, data: {}});
 };
 
+//@desc     Delete user
+//@route    DELETE /api/v1/auth/deleteUser
+//@access   Private
+exports.deleteUser = async (req, res, next) => {
+    try {
+        const userId = req.params.id;
+        const user = await User.findById(userId);
 
+        if (!user) {
+            return res.status(404).json({ success: false, message: `No user with id of ${userId}` });
+        }
+
+        await user.deleteOne();
+
+        res.status(200).json({ success: true, data: {} });
+    }
+    catch (error) {
+        res.status(500).json({ success: false, message: "Cannot delete user" });
+    }
+
+}
+
+        
 
 
