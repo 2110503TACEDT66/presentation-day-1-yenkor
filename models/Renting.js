@@ -7,6 +7,12 @@ const RentingSchema = new mongoose.Schema({
         type: Date,
         required: [true, 'Please add Rent Date']
     },
+    rentTo: {
+        type: Date,
+        default: function() {
+            return this.rentDate
+        }
+    },
     user: {
         type: mongoose.Schema.ObjectId,
         ref: 'User',
@@ -17,13 +23,7 @@ const RentingSchema = new mongoose.Schema({
         ref: 'CarProvider',
         required: [true, 'Please add Car Provider']
     },
-    // price: {
-    //     type: Number,
-    //     default: function() {
-    //         return this.carProvider.price;
-    //     }
-    // },
-    creatAt: {
+    createAt: {
         type: Date,
         default: Date.now()
     }

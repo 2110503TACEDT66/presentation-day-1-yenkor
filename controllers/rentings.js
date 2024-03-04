@@ -58,6 +58,45 @@ exports.getRenting = async (req,res,next) => {
     }
 };
 
+//@desc     Get near and overdue renting
+//@route    GET /api/v1/rentings/nearandover
+//@access   Public
+//Not working yet
+exports.getOverdueRentings = async (req,res,next) => {
+    let near,overdue;
+    if(req.user.role == 'admin') {
+        near = Renting.find({rentTo: {$gte: new Date().setDate(new Date().getDate+1)}}).populate({
+            path: 'carProvider',
+            select: 'name address telephone'
+        });
+        overdue = Renting.find({rentTo: {$gt: new Date()}}).populate({
+            path: 'carProvider',
+            select: 'name address telephone'
+        });
+    }
+    else {
+        near = Renting.find({user: req.user.id, rentTo: {$gte: new Date().setDate(new Date().getDate+1)}}).populate({
+            path: 'carProvider',
+            select: 'name address telephone'
+        });
+        overdue = Renting.find({user: req.user.id, rentTo: {$gt: new Date()}}).populate({
+            path: 'carProvider',
+            select: 'name address telephone'
+        });
+    };
+
+    try{
+        const warn = await near;
+        const over = await overdue
+        res.status(200).json({success: true, near: warn, overdue: over});
+    }
+    catch(err) {
+        console.log(err);
+        return res.status(500).json({success: false, message: "Cannot find renting"});
+    }
+};
+
+
 //@desc     Make a Renting
 //@route    POST /api/v1/carproviders/:carProviderId/rentings
 //@access   Private
@@ -143,6 +182,10 @@ exports.deleteRenting = async (req,res,next) => { // Please Refund user's balanc
         if (renting.user.toString() !== req.user.id && req.user.role !== 'admin') {
             return res.status(401).json({success: false, message: `User ${req.user.id} is not authorize to delete this renting`});
         }
+
+        await user.updateOne( 
+            { $inc: { balance: carProvider.price } }
+        );
 
         await Renting.deleteOne();
 
