@@ -187,7 +187,7 @@ exports.deleteRenting = async (req,res,next) => { // Please Refund user's balanc
             { $inc: { balance: carProvider.price } }
         );
 
-        await Renting.deleteOne();
+        await renting.deleteOne();
 
         res.status(200).json({success: true, data: {}});
         
