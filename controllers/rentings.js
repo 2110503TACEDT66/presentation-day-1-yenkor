@@ -183,6 +183,9 @@ exports.deleteRenting = async (req,res,next) => { // Please Refund user's balanc
             return res.status(401).json({success: false, message: `User ${req.user.id} is not authorize to delete this renting`});
         }
 
+        const user = await User.findById(renting.user);
+        const carProvider = await Provider.findById(renting.carProvider);
+
         await user.updateOne( 
             { $inc: { balance: carProvider.price } }
         );
