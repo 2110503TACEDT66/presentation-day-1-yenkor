@@ -17,7 +17,7 @@ controllersRenting->modelRenting ++: find({rentTo: {$lte: tomorrow, $gte: today}
 controllersRenting->modelRenting ++: find({rentTo: {$lt: today}, returned: false})
 
 modelRenting ->rentingDatabase ++: rentingSchema
-rentingDatabase --> modelRenting --: renting
-controllersRenting <-- modelRenting --: renting
+rentingDatabase --> modelRenting --: warn, over
+controllersRenting <-- modelRenting --: warn, over
 controllersRenting->client --: res.status(200).json({success: true, near: warn, overdue: over})
 @enduml
