@@ -51,6 +51,14 @@ UserSchema.pre('save', async function(next) {
     this.password = await bcrypt.hash(this.password, salt);
 })
 
+UserSchema.pre(
+    "deleteOne", { document: true, query: false }, async function (next) {
+        console.log(`Renting being removed from user ${this._id}`);
+        await this.model("Renting").deleteMany({ user: this._id });
+        next();
+});
+  
+
 // Sign a token
 UserSchema.methods.getSignedJwtToken = function() {
     return jwt.sign({id: this._id}, process.env.JWT_SECRET, {
