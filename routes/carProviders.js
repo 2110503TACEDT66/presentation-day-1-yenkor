@@ -6,7 +6,7 @@ const {
   updateCarProvider,
   deleteCarProvider,
   getNearByCarProviders,
-} = require("../controllers/CarProviders");
+} = require("../controllers/carProviders");
 
 const rentingsRouter = require("./rentings");
 

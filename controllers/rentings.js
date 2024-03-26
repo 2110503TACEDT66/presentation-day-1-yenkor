@@ -100,24 +100,34 @@ exports.getOverdueRentings = async (req,res,next) => {
 exports.addRenting = async (req,res,next) => {
     try {
         req.body.carProvider = req.params.carProviderId;
+        console.log(req.body.carProvider);
 
         const carProvider = await Provider.findById(req.params.carProviderId);
+        console.log(carProvider);
         if (!carProvider) return res.status(400).json({ success: false, message: `No car provider with the ID of ${req.params.id}` });
+        console.log(req.user.id);
         
         // console.log(req);
         
         // req.body.user = req.user.id;
-        const {rentDate, rentTo, returned} = req.body;
+        const { rentDate, rentTo, returned } = req.body;
+        console.log(req.body);
+        console.log(rentDate, rentTo, returned)
 
-        const existedRenting = await Renting.find({user: req.user.id});
+        const existedRenting = await Renting.find({ user: req.user.id });
+        console.log(existedRenting);
         // const {rentDate, user} = req.body;
         
         /**************************** Deducted user's balance ************************** */
         const user = await User.findById(req.user.id);
+        console.log(user);
         const isBalanceEnough = await user.checkBalance(carProvider.price);
+        console.log(isBalanceEnough);
 
-        if(req.body.user.toString() != req.user.id && req.user.role !== 'admin') {
-            return res.status(401).json({success: false, message: `user ${req.user.id} is not authorized to add ${req.body.user} renting`})
+        if(req.body.user != req.user.id && req.user.role !== 'admin') {
+            console.log(req.body.user);
+            console.log(req.user.id);
+            return res.status(401).json({ success: false, message: `user ${req.user.id} is not authorized to add ${req.body.user} renting` })
         }
 
         if (!isBalanceEnough && req.user.role != 'admin') {
@@ -193,20 +203,29 @@ exports.updateRenting = async (req, res, next) => {
 //@access   Private
 exports.deleteRenting = async (req,res,next) => { // Please Refund user's balance if User delete their renting
     try {
+        console.log("trying to delete" +req.params.id);
         const renting = await Renting.findById(req.params.id);
+        console.log(renting);
+
 
         if(!renting) return res.status(404).json({success: false, message:  `No renting with id of ${req.params.id}`});
         
         //Make sure user is the renting owner
+        console.log(renting.user);
+        console.log(req.user.id);
         if (renting.user.toString() !== req.user.id && req.user.role !== 'admin') {
+            console.log("not authorized to delete renting")
             return res.status(401).json({success: false, message: `User ${req.user.id} is not authorize to delete this renting`});
         }
 
         const today = new Date();
+        console.log(today);
         let before = new Date();
         before.setDate(today.getDate() - 1);
-        if(renting.rentDate >= before && req.user.role !== 'admin') {
-            return res.status(403).json({success: false, message: "User are not allowed to cancel renting in a day before the renting, please contact customer service if the cancellation is necessary"});
+        console.log(before);
+        if (renting.rentDate <= before && req.user.role !== 'admin') {
+            console.log("not allowed to delete renting");
+            return res.status(403).json({ success: false, message: "User is not allowed to cancel renting within one day before the renting start date. Please contact customer service if the cancellation is necessary." });
         }
 
 

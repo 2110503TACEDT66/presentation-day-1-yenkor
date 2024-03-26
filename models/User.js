@@ -42,7 +42,12 @@ const UserSchema = new mongoose.Schema({
     createAt: {
         type: Date,
         default: Date.now
-    }
+    },
+
+    address: {
+        type: String,
+        required: [false, 'options']
+    },
 });
 
 //Encrypt user password before store in Database
