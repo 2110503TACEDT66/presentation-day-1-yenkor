@@ -1,0 +1,1718 @@
+{
+	"info": {
+		"_postman_id": "2a068401-934c-410a-af02-e93df8ff8212",
+		"name": "Rental Car Booking Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29529636",
+		"_collection_link": "https://yenkor.postman.co/workspace/FinalProject-Yenkor~ba0106c2-53d4-439c-8a24-2212313fa150/collection/29529636-2a068401-934c-410a-af02-e93df8ff8212?action=share&source=collection_link&creator=29529636"
+	},
+	"item": [
+		{
+			"name": "Testing",
+			"item": [
+				{
+					"name": "registration_01",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"registration_01: User can successfully register with valid information.\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"User(Born)\",\r\n    \"telephone\" : \"0123456789\",\r\n    \"email\" : \"gog@gmail.com\",\r\n    \"password\" : \"1234567890\",\r\n    \"balance\" : 10000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/auth/register",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "registration_02",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"registration_02: User cannot register with incomplete information.\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"telephone\" : \"0123456789\",\r\n    \"email\" : \"gog@gmail.com\",\r\n    \"password\" : \"1234567890\",\r\n    \"balance\" : 10000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/auth/register",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "registration_03",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"registration_03: User cannot register with an already existing email address.\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"User(Born)Dup\",\r\n    \"telephone\" : \"0123456789\",\r\n    \"email\" : \"gog@gmail.com\",\r\n    \"password\" : \"1234567890\",\r\n    \"balance\" : 10000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/auth/register",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "registration_04",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Unregistered user cannot log in and access the system.\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									"\r",
+									"pm.sendRequest({\r",
+									"    url: \"localhost:5000/api/v1/auth/logout\",\r",
+									"    method: 'GET',\r",
+									"    header: {\r",
+									"        'Content-Type': 'application/json',\r",
+									"        // Add any other required headers here\r",
+									"    },\r",
+									"    body: {\r",
+									"    }\r",
+									"}, function (err, res) {\r",
+									"    pm.environment.set(\"TEST_TOKEN\" , null)\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TEST_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"User(Born)Dup\",\r\n    \"telephone\" : \"0123456789\",\r\n    \"email\" : \"gog@gmail.com\",\r\n    \"password\" : \"1234567890\",\r\n    \"balance\" : 10000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/carproviders/:carproviderID/rentings/",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"carproviders",
+								":carproviderID",
+								"rentings",
+								""
+							],
+							"variable": [
+								{
+									"key": "carproviderID",
+									"value": "65e56d793f53a8faf5f76e43",
+									"description": "Car Provider id for testing"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login_01",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Registered user can successfully log in with valid email and password.\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\" : \"gog@gmail.com\",\r\n    \"password\" : \"1234567890\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/auth/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login_02",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"User cannot log in with an incorrect password.\", function () {\r",
+									"    pm.response.to.have.status(401\r",
+									"    );\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\" : \"gog@gmail.com\",\r\n    \"password\" : \"NotTheCorrectOne\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/auth/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login_03",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\" User cannot log in with a non-existing email.\", function () {\r",
+									"    pm.response.to.have.status(400\r",
+									"    );\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\" : \"NotExistingOne@gmail.com\",\r\n    \"password\" : \"NotTheCorrectOne\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/auth/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TEST_SETUP // Get Current User information",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var requestBody = {\r",
+									"    \"email\" : \"gog@gmail.com\",\r",
+									"    \"password\" : \"1234567890\"\r",
+									"};\r",
+									"\r",
+									"// Send a POST request to create a new renting\r",
+									"pm.sendRequest({\r",
+									"    url: \"localhost:5000/api/v1/auth/login\",\r",
+									"    method: 'POST',\r",
+									"    header: {\r",
+									"        'Content-Type': 'application/json',\r",
+									"        // Add any other required headers here\r",
+									"    },\r",
+									"    body: {\r",
+									"        mode: 'raw',\r",
+									"        raw: JSON.stringify(requestBody)\r",
+									"    }\r",
+									"}, function (err, res) {\r",
+									"    pm.environment.set(\"TEST_TOKEN\" , res.json().token)\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"USER_ID_TO_DELETE\" , pm.response.json().data._id)\r",
+									"pm.environment.set(\"USER_ID\" , pm.response.json().data._id)\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TEST_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/auth/me",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "booking_01",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									"// Define the request body\r",
+									"var requestBody = {\r",
+									"    \"email\" : \"gog@gmail.com\",\r",
+									"    \"password\" : \"1234567890\"\r",
+									"};\r",
+									"\r",
+									"// Send a POST request to create a new renting\r",
+									"pm.sendRequest({\r",
+									"    url: \"localhost:5000/api/v1/auth/login\",\r",
+									"    method: 'POST',\r",
+									"    header: {\r",
+									"        'Content-Type': 'application/json',\r",
+									"        // Add any other required headers here\r",
+									"    },\r",
+									"    body: {\r",
+									"        mode: 'raw',\r",
+									"        raw: JSON.stringify(requestBody)\r",
+									"    }\r",
+									"}, function (err, res) {\r",
+									"    pm.environment.set(\"TEST_TOKEN\" , res.json().token)\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Registered user can book up to 3 cars with valid date and preferred rental car provider.\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"TEST_1_BOOKING_ID\" , pm.response.json().data._id)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TEST_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"rentDate\": \"2022-01-15T17:00:00.000Z\",\r\n    \"user\": \"{{USER_ID}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/carproviders/:carProviderID/rentings/",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"carproviders",
+								":carProviderID",
+								"rentings",
+								""
+							],
+							"variable": [
+								{
+									"key": "carProviderID",
+									"value": "65e56d793f53a8faf5f76e43"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "booking_02",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									"// Define the request body\r",
+									"var requestBody = {\r",
+									"    \"email\" : \"gog@gmail.com\",\r",
+									"    \"password\" : \"1234567890\"\r",
+									"};\r",
+									"\r",
+									"// Send a POST request to create a new renting\r",
+									"pm.sendRequest({\r",
+									"    url: \"localhost:5000/api/v1/auth/login\",\r",
+									"    method: 'POST',\r",
+									"    header: {\r",
+									"        'Content-Type': 'application/json',\r",
+									"        // Add any other required headers here\r",
+									"    },\r",
+									"    body: {\r",
+									"        mode: 'raw',\r",
+									"        raw: JSON.stringify(requestBody)\r",
+									"    }\r",
+									"}, function (err, res) {\r",
+									"    pm.environment.set(\"TEST_TOKEN\" , res.json().token)\r",
+									"});\r",
+									"\r",
+									"\r",
+									"requestBody = {\r",
+									"    \"rentDate\" : \"2025-01-15T17:00:00.000Z\",\r",
+									"    \"user\" : `${pm.environment.get(\"USER_ID\")}`\r",
+									"}\r",
+									"pm.sendRequest({\r",
+									"    url: \"localhost:5000/api/v1/carproviders/65e56d793f53a8faf5f76e43/rentings/\",\r",
+									"    method: 'POST',\r",
+									"    header: {\r",
+									"        'Content-Type': 'application/json',\r",
+									"        'Authorization': `Bearer ${pm.environment.get(\"TEST_TOKEN\")}`\r",
+									"        // Add any other required headers here\r",
+									"    },\r",
+									"    body: {\r",
+									"        mode: 'raw',\r",
+									"        raw: JSON.stringify(requestBody)\r",
+									"    }\r",
+									"}, function (err, res) {\r",
+									"    pm.environment.set(\"TEST_2_BOOKING_ID\" , res.json().data._id)\r",
+									"});\r",
+									"\r",
+									"requestBody = {\r",
+									"    \"rentDate\" : \"2025-01-15T17:00:00.000Z\",\r",
+									"    \"user\" : `${pm.environment.get(\"USER_ID\")}`\r",
+									"}\r",
+									"pm.sendRequest({\r",
+									"    url: \"localhost:5000/api/v1/carproviders/65e56d793f53a8faf5f76e43/rentings/\",\r",
+									"    method: 'POST',\r",
+									"    header: {\r",
+									"        'Authorization': `Bearer ${pm.environment.get(\"TEST_TOKEN\")}`,\r",
+									"        'Content-Type': 'application/json',\r",
+									"        // Add any other required headers here\r",
+									"    },\r",
+									"    body: {\r",
+									"        mode: 'raw',\r",
+									"        raw: JSON.stringify(requestBody)\r",
+									"    }\r",
+									"}, function (err, res) {\r",
+									"    pm.environment.set(\"TEST_3_BOOKING_ID\" , res.json().data._id)\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"User cannot book more than 3 cars.\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TEST_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"rentDate\" : \"2022-01-15T17:00:00.000Z\",\r\n    \"user\" : \"{{USER_ID}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/carproviders/:carProviderID/rentings/",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"carproviders",
+								":carProviderID",
+								"rentings",
+								""
+							],
+							"variable": [
+								{
+									"key": "carProviderID",
+									"value": "65e56d793f53a8faf5f76e43"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "booking_03",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									"// Define the request body\r",
+									"var requestBody = {\r",
+									"    \"email\" : \"gog@gmail.com\",\r",
+									"    \"password\" : \"1234567890\"\r",
+									"};\r",
+									"\r",
+									"// Send a POST request to create a new renting\r",
+									"pm.sendRequest({\r",
+									"    url: \"localhost:5000/api/v1/auth/login\",\r",
+									"    method: 'POST',\r",
+									"    header: {\r",
+									"        'Content-Type': 'application/json',\r",
+									"        // Add any other required headers here\r",
+									"    },\r",
+									"    body: {\r",
+									"        mode: 'raw',\r",
+									"        raw: JSON.stringify(requestBody)\r",
+									"    }\r",
+									"}, function (err, res) {\r",
+									"    pm.environment.set(\"TEST_TOKEN\" , res.json().token)\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"User cannot book a car without selecting a rental car provider.\", function () {",
+									"    pm.response.to.have.status(500);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TEST_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"rentDate\" : \"2022-01-15T17:00:00.000Z\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/carproviders/:carProviderID/rentings/",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"carproviders",
+								":carProviderID",
+								"rentings",
+								""
+							],
+							"variable": [
+								{
+									"key": "carProviderID",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "view_bookings_01",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var requestBody = {\r",
+									"    \"email\" : \"gog@gmail.com\",\r",
+									"    \"password\" : \"1234567890\"\r",
+									"};\r",
+									"\r",
+									"// Send a POST request to create a new renting\r",
+									"pm.sendRequest({\r",
+									"    url: \"localhost:5000/api/v1/auth/login\",\r",
+									"    method: 'POST',\r",
+									"    header: {\r",
+									"        'Content-Type': 'application/json',\r",
+									"        // Add any other required headers here\r",
+									"    },\r",
+									"    body: {\r",
+									"        mode: 'raw',\r",
+									"        raw: JSON.stringify(requestBody)\r",
+									"    }\r",
+									"}, function (err, res) {\r",
+									"    pm.environment.set(\"TEST_TOKEN\" , res.json().token)\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Registered user can view their own rental car bookings.\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TEST_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/api/v1/rentings/",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rentings",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "edit_booking_01",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"User can successfully edit their own rental car bookings.\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TEST_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"rentDate\" :  \"2022-01-10T17:00:00.000Z\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/rentings/{{TEST_1_BOOKING_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rentings",
+								"{{TEST_1_BOOKING_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "edit_booking_02",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"User cannot edit a booking with a non-existing rental car provider.\", function () {\r",
+									"    pm.response.to.have.status(500);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TEST_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"carProvider\" :  \"notthecorrected one\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/rentings/{{TEST_1_BOOKING_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rentings",
+								"{{TEST_1_BOOKING_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete_booking_01",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Registered user can successfully delete their own rental car bookings.\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TEST_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/api/v1/rentings/{{TEST_1_BOOKING_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rentings",
+								"{{TEST_1_BOOKING_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout_01",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"User can successfully logout from the system.\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TEST_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/auth/logout",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "admin_view_bookings_01",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									"// Define the request body\r",
+									"var requestBody = {\r",
+									"    \"email\" : \"gg@gmail.com\",\r",
+									"    \"password\" : \"1234567890\"\r",
+									"};\r",
+									"\r",
+									"// Send a POST request to create a new renting\r",
+									"pm.sendRequest({\r",
+									"    url: \"localhost:5000/api/v1/auth/login\",\r",
+									"    method: 'POST',\r",
+									"    header: {\r",
+									"        'Content-Type': 'application/json',\r",
+									"        // Add any other required headers here\r",
+									"    },\r",
+									"    body: {\r",
+									"        mode: 'raw',\r",
+									"        raw: JSON.stringify(requestBody)\r",
+									"    }\r",
+									"}, function (err, res) {\r",
+									"    pm.environment.set(\"TEST_TOKEN\" , res.json().token)\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Admin can view any rental car bookings.\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TEST_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/api/v1/rentings/",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rentings",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "admin_edit_booking_01",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									"// Define the request body\r",
+									"var requestBody = {\r",
+									"    \"email\" : \"gg@gmail.com\",\r",
+									"    \"password\" : \"1234567890\"\r",
+									"};\r",
+									"\r",
+									"// Send a POST request to create a new renting\r",
+									"pm.sendRequest({\r",
+									"    url: \"localhost:5000/api/v1/auth/login\",\r",
+									"    method: 'POST',\r",
+									"    header: {\r",
+									"        'Content-Type': 'application/json',\r",
+									"        // Add any other required headers here\r",
+									"    },\r",
+									"    body: {\r",
+									"        mode: 'raw',\r",
+									"        raw: JSON.stringify(requestBody)\r",
+									"    }\r",
+									"}, function (err, res) {\r",
+									"    pm.environment.set(\"TEST_TOKEN\" , res.json().token)\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Admin can successfully edit any rental car bookings.\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TEST_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\r\n{\r\n    \"rentDate\" : \"2022-01-20T17:00:00.000Z\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/rentings/{{TEST_2_BOOKING_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rentings",
+								"{{TEST_2_BOOKING_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "admin_delete_booking_01",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									"// Define the request body\r",
+									"var requestBody = {\r",
+									"    \"email\" : \"gg@gmail.com\",\r",
+									"    \"password\" : \"1234567890\"\r",
+									"};\r",
+									"\r",
+									"// Send a POST request to create a new renting\r",
+									"pm.sendRequest({\r",
+									"    url: \"localhost:5000/api/v1/auth/login\",\r",
+									"    method: 'POST',\r",
+									"    header: {\r",
+									"        'Content-Type': 'application/json',\r",
+									"        // Add any other required headers here\r",
+									"    },\r",
+									"    body: {\r",
+									"        mode: 'raw',\r",
+									"        raw: JSON.stringify(requestBody)\r",
+									"    }\r",
+									"}, function (err, res) {\r",
+									"    pm.environment.set(\"TEST_TOKEN\" , res.json().token)\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Admin can successfully delete any rental car bookings.\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TEST_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/rentings/{{TEST_2_BOOKING_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rentings",
+								"{{TEST_2_BOOKING_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "admin_view_car_provider_01",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									"// Define the request body\r",
+									"var requestBody = {\r",
+									"    \"email\" : \"gg@gmail.com\",\r",
+									"    \"password\" : \"1234567890\"\r",
+									"};\r",
+									"\r",
+									"// Send a POST request to create a new renting\r",
+									"pm.sendRequest({\r",
+									"    url: \"localhost:5000/api/v1/auth/login\",\r",
+									"    method: 'POST',\r",
+									"    header: {\r",
+									"        'Content-Type': 'application/json',\r",
+									"        // Add any other required headers here\r",
+									"    },\r",
+									"    body: {\r",
+									"        mode: 'raw',\r",
+									"        raw: JSON.stringify(requestBody)\r",
+									"    }\r",
+									"}, function (err, res) {\r",
+									"    pm.environment.set(\"TEST_TOKEN\" , res.json().token)\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Admin can view any rental car provider.\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TEST_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/api/v1/carproviders/",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"carproviders",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "admin_add_car_provider_01",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									"// Define the request body\r",
+									"var requestBody = {\r",
+									"    \"email\" : \"gg@gmail.com\",\r",
+									"    \"password\" : \"1234567890\"\r",
+									"};\r",
+									"\r",
+									"// Send a POST request to create a new renting\r",
+									"pm.sendRequest({\r",
+									"    url: \"localhost:5000/api/v1/auth/login\",\r",
+									"    method: 'POST',\r",
+									"    header: {\r",
+									"        'Content-Type': 'application/json',\r",
+									"        // Add any other required headers here\r",
+									"    },\r",
+									"    body: {\r",
+									"        mode: 'raw',\r",
+									"        raw: JSON.stringify(requestBody)\r",
+									"    }\r",
+									"}, function (err, res) {\r",
+									"    pm.environment.set(\"TEST_TOKEN\" , res.json().token)\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"ADMIN_CAR_ID\" , pm.response.json().data.id)\r",
+									"pm.test(\"Admin can add a new rental car provider to the system.\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TEST_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\r\n{\r\n    \"name\" : \"AdminCreated\",\r\n    \"address\" : \"AdminCreated\",\r\n    \"telephone\" : \"1234567890\",\r\n    \"price\" : 1000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/carproviders/",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"carproviders",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "admin_edit_car_provider_01",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									"// Define the request body\r",
+									"var requestBody = {\r",
+									"    \"email\" : \"gg@gmail.com\",\r",
+									"    \"password\" : \"1234567890\"\r",
+									"};\r",
+									"\r",
+									"// Send a POST request to create a new renting\r",
+									"pm.sendRequest({\r",
+									"    url: \"localhost:5000/api/v1/auth/login\",\r",
+									"    method: 'POST',\r",
+									"    header: {\r",
+									"        'Content-Type': 'application/json',\r",
+									"        // Add any other required headers here\r",
+									"    },\r",
+									"    body: {\r",
+									"        mode: 'raw',\r",
+									"        raw: JSON.stringify(requestBody)\r",
+									"    }\r",
+									"}, function (err, res) {\r",
+									"    pm.environment.set(\"TEST_TOKEN\" , res.json().token)\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Admin can edit the details of an existing rental car provider.\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TEST_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"AdminEdit\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/carproviders/{{ADMIN_CAR_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"carproviders",
+								"{{ADMIN_CAR_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "admin_remove_car_provider_01",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									"// Define the request body\r",
+									"var requestBody = {\r",
+									"    \"email\" : \"gg@gmail.com\",\r",
+									"    \"password\" : \"1234567890\"\r",
+									"};\r",
+									"\r",
+									"// Send a POST request to create a new renting\r",
+									"pm.sendRequest({\r",
+									"    url: \"localhost:5000/api/v1/auth/login\",\r",
+									"    method: 'POST',\r",
+									"    header: {\r",
+									"        'Content-Type': 'application/json',\r",
+									"        // Add any other required headers here\r",
+									"    },\r",
+									"    body: {\r",
+									"        mode: 'raw',\r",
+									"        raw: JSON.stringify(requestBody)\r",
+									"    }\r",
+									"}, function (err, res) {\r",
+									"    pm.environment.set(\"TEST_TOKEN\" , res.json().token)\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Admin can remove an existing rental car provider from the system.\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TEST_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/carproviders/{{ADMIN_CAR_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"carproviders",
+								"{{ADMIN_CAR_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "End of test",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									"\r",
+									"requestBody = {\r",
+									"    \"email\" : \"gg@gmail.com\",\r",
+									"    \"password\" : \"1234567890\"\r",
+									"};\r",
+									"\r",
+									"// Send a POST request to create a new renting\r",
+									"pm.sendRequest({\r",
+									"    url: \"localhost:5000/api/v1/auth/login\",\r",
+									"    method: 'POST',\r",
+									"    header: {\r",
+									"        'Content-Type': 'application/json',\r",
+									"        // Add any other required headers here\r",
+									"    },\r",
+									"    body: {\r",
+									"        mode: 'raw',\r",
+									"        raw: JSON.stringify(requestBody)\r",
+									"    }\r",
+									"}, function (err, res) {\r",
+									"    pm.environment.set(\"TEST_TOKEN\" , res.json().token)\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TEST_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/api/v1/auth/deleteuser/{{USER_ID_TO_DELETE}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"deleteuser",
+								"{{USER_ID_TO_DELETE}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "URL",
+			"value": "localhost:5000",
+			"type": "string"
+		}
+	]
+}
